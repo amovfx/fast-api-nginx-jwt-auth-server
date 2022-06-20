@@ -1,0 +1,17 @@
+version: '3.3'
+
+services:
+  jwt-certs:
+    build:
+      context: ./jwt-certs
+    volumes:
+      - certs:/app/jwt-certs/keys/
+
+
+
+
+volumes:
+  certs:
+
+      
+    
