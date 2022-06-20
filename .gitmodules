@@ -1,0 +1,9 @@
+[submodule "jwt-certs"]
+	path = jwt-certs
+	url = ../jwt-certs
+[submodule "fast-api-jwt"]
+	path = fast-api-jwt
+	url = ../fast-api-jwt
+[submodule "nginx-jwt"]
+	path = nginx-jwt
+	url = ../nginx-jwt
