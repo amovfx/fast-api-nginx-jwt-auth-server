@@ -2,16 +2,48 @@ version: '3.3'
 
 services:
   jwt-certs:
+    container_name: certs
     build:
       context: ./jwt-certs
+      dockerfile: ./Dockerfile
     volumes:
       - certs:/app/jwt-certs/keys/
 
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx-jwt
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
 
+    volumes:
+      - ./fast-api-jwt/fast-api-jwt.location:/etc/nginx/conf.d/locations/fast-apit-jwt.location
+      - ./nginx-jwt/conf/conf.d/default.conf/:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - fast-api-jwt
+    networks:
+      - backend
 
+  fast-api-jwt:
+    container_name: fast-api
+    build:
+      context: ./fast-api-jwt
+      dockerfile: Dockerfile
+    networks:
+      - backend
+
+    ports:
+      - 8080:8080
+    command: ["uvicorn", "src.main:app", "--host=0.0.0.0", "--port", "8080"]
 
 volumes:
   certs:
+
+networks:
+  backend:
+    driver: bridge
+
 
       
     
