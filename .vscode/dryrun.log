@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/andrewoseen/git/fast-api-nginx-jwt-auth-server'
+make: Leaving directory `/Users/andrewoseen/git/fast-api-nginx-jwt-auth-server'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
