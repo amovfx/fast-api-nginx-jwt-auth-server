@@ -7,3 +7,6 @@
 [submodule "nginx-jwt"]
 	path = nginx-jwt
 	url = ../nginx-jwt
+[submodule "frontend-svelte"]
+	path = frontend-svelte
+	url = ../frontend-svelte
