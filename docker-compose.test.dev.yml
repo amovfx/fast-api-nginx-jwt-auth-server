@@ -1,0 +1,50 @@
+version: '3.9'
+  
+services:
+
+  auth-server:
+    build:
+      context: ./fast-api-jwt
+      dockerfile: Dockerfile
+
+    restart: always
+    environment:
+      JWT_SECRET_FILE: /run/secrets/priv-key
+      JWT_PUBLIC_FILE: /run/secrets/pub-key
+      API_PORT: "${API_PORT}"
+    networks:
+      - login-server
+    command: "./src/run-server.sh"
+    secrets:
+      - priv-key
+      - pub-key
+
+  frontend:
+    container_name: svelte
+    build:
+      context: ./frontend-svelte
+      dockerfile: Dockerfile.dev
+    environment:
+      API_BASE_URL: "${API_BASE_URL}:${API_PORT}"
+    ports:
+      - 3000:3000
+      - 15000:15000
+    volumes:
+      - ./frontend-svelte/src/:/app/src/
+      - ./frontend-svelte/static/:/app/static/
+    networks:
+      - login-server
+    command: npm run dev-with-args-flag
+
+
+
+networks:
+  login-server:
+    driver: bridge
+
+secrets:
+   priv-key:
+     file: "${PRIVATE_KEY_FILE}"
+   pub-key:
+     file: "${PUBLIC_KEY_FILE}"
+

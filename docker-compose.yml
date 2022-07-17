@@ -1,77 +1,21 @@
-version: '3.3'
-
-services:
-  nginx:
-    container_name: nginx
-    build:
-      context: ./nginx-jwt
-      dockerfile: Dockerfile
-    ports:
-      - 80:80
-    environment:
-      - JWT_PUBLIC_KEY_FILE=/run/secrets/jwt-public
-    secrets:
-      - jwt-public
-    volumes:
-      - ./fast-api-jwt/fast-api-jwt.location:/etc/nginx/conf.d/locations/fast-api-jwt.location
-      - ./nginx-jwt/conf/conf.d/default.conf/:/etc/nginx/conf.d/default.conf
-
-    depends_on:
-      - fast-api-jwt
-      - jwt-certs
-    networks:
-      - backend
-
-  fast-api-jwt:
-    container_name: fast-api
-    build:
-      context: ./fast-api-jwt
-      dockerfile: Dockerfile
-    environment: 
-      - JWT_PRIVATE_KEY_FILE=/run/secrets/jwt-private
-    networks:
-      - backend
-      - frontend
-      
-    secrets:
-      - jwt-private
-    ports:
-      - 8080:8080
-    command: ["uvicorn", "src.main:app", "--host=0.0.0.0", "--port", "8080"]
-
-  svelte-auth:
-    container_name: frontend-svelte
-    build:
-      context: ./frontend-svelte
-      dockerfile: Dockerfile.dev
-    networks:
-      - frontend
-    ports:
-      - 3000:3000
-      - 15000:15000
-    volumes:
-      - ./frontend-svelte/src/:/app/src/
-      - ./frontend-svelte/static/:/app/static/
-    command: npm run dev-with-args-flag
-    
-
-volumes:
-  pub:
-  priv:
-
-
-networks:
-  backend:
-    driver: bridge
-  frontend:
-    driver: bridge
-
-secrets:
-  jwt-private:
-    file: ${PRIVATE_KEY_PATH}
-  jwt-public:
-    file: ${PUBLIC_KEY_PATH}
-
-
-      
-    
+  version: '3.9'
+  
+  services:
+  
+    frontend:
+      container_name: svelte
+      build:
+        context: .
+        dockerfile: Dockerfile.dev
+      environment:
+        - API_BASE_URL=http://localhost:8000
+      ports:
+        - 3000:3000
+        - 15000:15000
+      volumes:
+        - ./src/:/app/src/
+        - ./static/:/app/static/
+      networks:
+        - login-server
+        - frontend
+      command: npm run dev-with-args-flag
