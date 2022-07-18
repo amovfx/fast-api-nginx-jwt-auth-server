@@ -12,6 +12,10 @@ services:
       JWT_SECRET_FILE: /run/secrets/priv-key
       JWT_PUBLIC_FILE: /run/secrets/pub-key
       API_PORT: "${API_PORT}"
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    volumes:
+      - ./fast-api-jwt/src:/app/src
     networks:
       - login-server
     command: "./src/run-server.sh"
