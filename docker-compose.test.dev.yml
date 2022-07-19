@@ -28,8 +28,10 @@ services:
     build:
       context: ./frontend-svelte
       dockerfile: Dockerfile.dev
+    restart: always
     environment:
-      API_BASE_URL: "${API_DOMAIN}:${API_PORT}${API_ROUTE}"
+      SERVER_API_BASE_URL: "${API_DOCKER_DOMAIN}:${API_PORT}${API_ROUTE}"
+      VITE_CLIENT_API_BASE_URL: "${API_DOMAIN}:${API_PORT}${API_ROUTE}"
     ports:
       - 3000:3000
       - 15000:15000
